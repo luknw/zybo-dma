@@ -157,12 +157,8 @@ int main(void)
 
 	Demo.u8Verbose = 0;
 
-	//Xil_DCacheDisable();
-
 	xil_printf("\r\n--- Entering main() --- \r\n");
 
-
-	//
 	//Initialize the interrupt controller
 
 	Status = fnInitInterruptController(&sIntc);
@@ -170,7 +166,6 @@ int main(void)
 		xil_printf("Error initializing interrupts");
 		return XST_FAILURE;
 	}
-
 
 	// Initialize IIC controller
 	Status = fnInitIic(&sIic);
@@ -186,14 +181,12 @@ int main(void)
     	return XST_FAILURE;
     }
 
-
 	//Initialize DMA
 	Status = fnConfigDma(&sAxiDma);
 	if(Status != XST_SUCCESS) {
 		xil_printf("DMA configuration ERROR");
 		return XST_FAILURE;
 	}
-
 
 	//Initialize Audio I2S
 	Status = fnInitAudio();
@@ -211,6 +204,7 @@ int main(void)
 		}
 		while((tEnd-tStart)/(COUNTS_PER_SECOND/10) < 20);
 	}
+
 	//Initialize Audio I2S
 	Status = fnInitAudio();
 	if(Status != XST_SUCCESS) {
@@ -218,11 +212,9 @@ int main(void)
 		return XST_FAILURE;
 	}
 
-
 	// Enable all interrupts in our interrupt vector table
 	// Make sure all driver instances using interrupts are initialized first
 	fnEnableInterrupts(&sIntc, &ivt[0], sizeof(ivt)/sizeof(ivt[0]));
-
 
 
 	xil_printf("----------------------------------------------------------\r\n");
@@ -260,9 +252,10 @@ int main(void)
 			// Disable Stream function to send data (S2MM)
 			Xil_Out32(I2S_STREAM_CONTROL_REG, 0x00000000);
 			Xil_Out32(I2S_TRANSFER_CONTROL_REG, 0x00000000);
+
 			//Flush cache
-//					//microblaze_flush_dcache();
 			Xil_DCacheFlushRange((u32) MEM_BASE_ADDR, NR_SEC_TO_REC_PLAY * NR_CHANNELS * NR_AUDIO_SAMPLES);
+
 			//Reset MM2S event and playback flag
 			Demo.fDmaMM2SEvent = 0;
 			Demo.fAudioPlayback = 0;

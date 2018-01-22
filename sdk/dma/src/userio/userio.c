@@ -59,7 +59,7 @@
 
 extern volatile sDemo_t Demo;
 
-void fnUpdateLedsFromSwitches(XGpio *psGpio);
+void fnUpdatePressedButton(XGpio *psGpio);
 
 XStatus fnInitUserIO(XGpio *psGpio)
 {
@@ -79,7 +79,7 @@ XStatus fnInitUserIO(XGpio *psGpio)
 	 */
 	XGpio_SetDataDirection(psGpio, BTN_SW_CHANNEL, BTNS_SWS_MASK);
 
-	fnUpdateLedsFromSwitches(psGpio);
+	fnUpdatePressedButton(psGpio);
 
 	/*
 	 * Enable the GPIO channel interrupts so that push button can be
@@ -91,7 +91,7 @@ XStatus fnInitUserIO(XGpio *psGpio)
 	return XST_SUCCESS;
 }
 
-void fnUpdateLedsFromSwitches(XGpio *psGpio)
+void fnUpdatePressedButton(XGpio *psGpio)
 {
 	static u32 dwPrevButtons = 0;
 	u32  dwBtn;
@@ -175,7 +175,7 @@ void fnUserIOIsr(void *pvInst)
 		return;
 	}
 
-	fnUpdateLedsFromSwitches(psGpio);
+	fnUpdatePressedButton(psGpio);
 
 
 
