@@ -316,7 +316,10 @@ XStatus fnAudioStartupConfig ()
 		return XST_FAILURE;
 	}
 	fnAudioWriteToReg(R5_DIGITAL_PATH, 0b000000000);
-	fnAudioWriteToReg(R7_DIGITAL_IF, 0b000001010);
+	// set 24 bits samples
+//	fnAudioWriteToReg(R7_DIGITAL_IF, 0b000001010);
+	// set 32 bit samples
+	fnAudioWriteToReg(R7_DIGITAL_IF, 0b000001110);
 	fnAudioWriteToReg(R8_SAMPLE_RATE, 0b000000000);
 	usleep(1000);
 	fnAudioWriteToReg(R9_ACTIVE, 0b000000001);

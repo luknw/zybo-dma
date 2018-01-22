@@ -25,11 +25,6 @@
 /************************************************************************/
 
 
-#include "demo.h"
-
-
-
-
 #include "audio/audio.h"
 #include "dma/dma.h"
 #include "intc/intc.h"
@@ -62,16 +57,7 @@
  * Device hardware build related constants.
  */
 
-// Audio constants
-// Number of seconds to record/playback
-#define NR_SEC_TO_REC_PLAY		5
-
-// ADC/DAC sampling rate in Hz
-//#define AUDIO_SAMPLING_RATE		1000
-#define AUDIO_SAMPLING_RATE	  96000
-
-// Number of samples to record/playback
-#define NR_AUDIO_SAMPLES		(NR_SEC_TO_REC_PLAY*AUDIO_SAMPLING_RATE)
+#include "custom/audio_constants.h" /*******************************************************************************************/
 
 /* Timeout loop counter for reset
  */
@@ -90,6 +76,12 @@
 #if (!defined(DEBUG))
 extern void xil_printf(const char *format, ...);
 #endif
+
+
+
+#include "demo.h" /*************************************************************************************************************/
+#include "custom/custom.h"
+
 
 
 /************************** Variable Definitions *****************************/
@@ -163,7 +155,7 @@ int main(void)
 {
 	int Status;
 
-	Demo.u8Verbose = 1;
+	Demo.u8Verbose = 0;
 
 	//Xil_DCacheDisable();
 
@@ -250,9 +242,9 @@ int main(void)
 			Xil_Out32(I2S_STREAM_CONTROL_REG, 0x00000000);
 			Xil_Out32(I2S_TRANSFER_CONTROL_REG, 0x00000000);
 
-			Xil_DCacheInvalidateRange((u32) MEM_BASE_ADDR, 5*NR_AUDIO_SAMPLES);
+			Xil_DCacheInvalidateRange((u32) MEM_BASE_ADDR, NR_SEC_TO_REC_PLAY * NR_CHANNELS * NR_AUDIO_SAMPLES);
 
-			xil_printf("\r\ndupa");
+			process_buffer(); /*************************************************************************************************/
 
 			//microblaze_invalidate_dcache();
 			// Reset S2MM event and record flag
@@ -270,7 +262,7 @@ int main(void)
 			Xil_Out32(I2S_TRANSFER_CONTROL_REG, 0x00000000);
 			//Flush cache
 //					//microblaze_flush_dcache();
-			Xil_DCacheFlushRange((u32) MEM_BASE_ADDR, 5*NR_AUDIO_SAMPLES);
+			Xil_DCacheFlushRange((u32) MEM_BASE_ADDR, NR_SEC_TO_REC_PLAY * NR_CHANNELS * NR_AUDIO_SAMPLES);
 			//Reset MM2S event and playback flag
 			Demo.fDmaMM2SEvent = 0;
 			Demo.fAudioPlayback = 0;
@@ -298,7 +290,7 @@ int main(void)
 						xil_printf("\r\nStart Recording...\r\n");
 						fnSetMicInput();
 
-						fnAudioRecord(sAxiDma,NR_AUDIO_SAMPLES);
+						fnAudioRecord(sAxiDma, NR_CHANNELS * NR_AUDIO_SAMPLES);
 						Demo.fAudioRecord = 1;
 					}
 					else
@@ -318,7 +310,7 @@ int main(void)
 					{
 						xil_printf("\r\nStart Playback...\r\n");
 						fnSetHpOutput();
-						fnAudioPlay(sAxiDma,NR_AUDIO_SAMPLES);
+						fnAudioPlay(sAxiDma, NR_CHANNELS * NR_AUDIO_SAMPLES);
 						Demo.fAudioPlayback = 1;
 					}
 					else
@@ -338,9 +330,9 @@ int main(void)
 					{
 						xil_printf("\r\nStart Recording...\r\n");
 						fnSetLineInput();
-						fnAudioRecord(sAxiDma,NR_AUDIO_SAMPLES);
+
+						fnAudioRecord(sAxiDma, NR_CHANNELS * NR_AUDIO_SAMPLES);
 						Demo.fAudioRecord = 1;
-						xil_printf("\r\nFoobar\r\n")
 					}
 					else
 					{
@@ -359,7 +351,7 @@ int main(void)
 					{
 						xil_printf("\r\nStart Playback...");
 						fnSetLineOutput();
-						fnAudioPlay(sAxiDma,NR_AUDIO_SAMPLES);
+						fnAudioPlay(sAxiDma, NR_CHANNELS * NR_AUDIO_SAMPLES);
 						Demo.fAudioPlayback = 1;
 					}
 					else
