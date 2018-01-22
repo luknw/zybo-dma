@@ -220,6 +220,7 @@ int main(void)
 	xil_printf("----------------------------------------------------------\r\n");
 	xil_printf("Zybo DMA Audio Demo\r\n");
 	xil_printf("----------------------------------------------------------\r\n");
+	xil_printf("Ready\r\n");
 
     //main loop
 
