@@ -131,80 +131,6 @@ XStatus fnAudioReadFromReg(u8 u8RegAddr, u8 *u8RxData) {
 }
 
 /******************************************************************************
- * Configures audio codes's internal PLL. With MCLK = 12.288 MHz it configures the
- * PLL for a VCO frequency = 49.152 MHz.
- *
- * @param	none.
- *
- * @return	XST_SUCCESS if PLL is locked
- *****************************************************************************/
-//XStatus fnAudioPllConfig() {
-//
-//	u8 u8TxData[8], u8RxData[6];
-//	int Status;
-//
-//	Status = fnAudioWriteToReg(R0_CLOCK_CONTROL, 0x0E);
-//	if (Status == XST_FAILURE)
-//	{
-//		if (Demo.u8Verbose)
-//		{
-//			xil_printf("\r\nError: could not write R0_CLOCK_CONTROL (0x0E)");
-//		}
-//		return XST_FAILURE;
-//	}
-//
-//	// Write 6 bytes to R1
-//	// For setting the PLL with a MCLK = 12.288 MHz the datasheet suggests the
-//	// following configuration 0xXXXXXX2001
-//	u8TxData[0] = 0x40;
-//	u8TxData[1] = 0x02;
-//	u8TxData[2] = 0x00; // byte 1
-//	u8TxData[3] = 0x7D; // byte 2
-//	u8TxData[4] = 0x00; // byte 3
-//	u8TxData[5] = 0x0C; // byte 4
-//	u8TxData[6] = 0x20; // byte 5
-//	u8TxData[7] = 0x01; // byte 6
-//
-//	Status = XIic_Send(XPAR_IIC_0_BASEADDR, IIC_SLAVE_ADDR, u8TxData, 8, XIIC_STOP);
-//	if (Status != 8)
-//	{
-//		if (Demo.u8Verbose)
-//		{
-//			xil_printf("\r\nError: could not send data to R1_PLL_CONTROL (0xXXXXXX2001)");
-//		}
-//		return XST_FAILURE;
-//	}
-//	// Poll PLL Lock bit
-//	u8TxData[0] = 0x40;
-//	u8TxData[1] = 0x02;
-//
-//	//Wait for the PLL to lock
-//	do {
-//		XIic_Send(XPAR_IIC_0_BASEADDR, IIC_SLAVE_ADDR, u8TxData, 2, XIIC_STOP);
-//
-//		XIic_Recv(XPAR_IIC_0_BASEADDR, IIC_SLAVE_ADDR, u8RxData, 6, XIIC_STOP);
-//		if(Demo.u8Verbose) {
-//			xil_printf("\nAudio PLL R1 = 0x%x%x%x%x%x%x", u8RxData[0], u8RxData[1],
-//				u8RxData[2], u8RxData[3], u8RxData[4], u8RxData[5]);
-//		}
-//	}
-//	while((u8RxData[5] & 0x02) == 0);
-//
-//	//Set COREN
-//	Status = fnAudioWriteToReg(R0_CLOCK_CONTROL, 0x0F);
-//	if (Status == XST_FAILURE)
-//	{
-//		if (Demo.u8Verbose)
-//		{
-//			xil_printf("\r\nError: could not write R0_CLOCK_CONTROL (0x0F)");
-//		}
-//		return XST_FAILURE;
-//	}
-//
-//	return XST_SUCCESS;
-//}
-
-/******************************************************************************
  * Configure the initial settings of the audio controller, the majority of
  * these will remain unchanged during the normal functioning of the code.
  * In order to generate a correct BCLK and LRCK, which are crucial for the
@@ -339,16 +265,6 @@ XStatus fnAudioStartupConfig ()
 XStatus fnInitAudio()
 {
 	int Status;
-
-	//Set the PLL and wait for Lock
-	//Status = fnAudioPllConfig();
-//	if (Status != XST_SUCCESS)
-//	{
-//		if (Demo.u8Verbose)
-//		{
-//			xil_printf("\r\nError: Could not lock PLL");
-//		}
-//	}
 
 	//Configure the ADAU registers
 	Status = fnAudioStartupConfig();

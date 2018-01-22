@@ -199,7 +199,6 @@ extern u8 u8Verbose;
 
 XStatus fnAudioWriteToReg(u8 u8RegAddr, u16 u8Data);
 XStatus fnAudioReadFromReg(u8 u8RegAddr, u8 *u8RxData);
-//XStatus fnAudioPllConfig();
 XStatus fnAudioStartupConfig ();
 XStatus fnInitAudio();
 void fnAudioRecord(XAxiDma AxiDma, u32 u32NrSamples);
