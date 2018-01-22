@@ -306,7 +306,7 @@ void fnAudioRecord(XAxiDma AxiDma, u32 u32NrSamples)
 			xil_printf("\n fail @ rec; ERROR: %d", uTransferVariable.l);
 	}
 
-	// Send number of samples to recorde
+	// Send number of samples to record
 	Xil_Out32(I2S_PERIOD_COUNT_REG, u32NrSamples);
 
 	// Start i2s initialization sequence
